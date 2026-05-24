@@ -1,0 +1,10 @@
+{
+  "IoTDataStorage.sol": {
+    "__sources__": {
+      "IoTDataStorage.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ncontract IoTDataStorage {\r\n    struct IoTData {\r\n        uint256 timestamp;\r\n        string deviceId;\r\n        string dataType;\r\n        string dataValue;\r\n    }\r\n\r\n    uint256 public constant MAX_ENTRIES = 100;\r\n    IoTData[] public dataRecords;\r\n    address public owner;\r\n\r\n    event DataStored(uint256 timestamp, string deviceId, string dataType, string dataValue);\r\n\r\n    modifier onlyOwner() {\r\n        require(msg.sender == owner, \"Not authorized\");\r\n        _;\r\n    }\r\n\r\n    constructor() {\r\n        owner = msg.sender;\r\n    }\r\n\r\n    function storeData(string memory _deviceId, string memory _dataType, string memory _dataValue) public onlyOwner {\r\n        require(dataRecords.length < MAX_ENTRIES, \"Storage limit reached\");\r\n        dataRecords.push(IoTData(block.timestamp, _deviceId, _dataType, _dataValue));\r\n        emit DataStored(block.timestamp, _deviceId, _dataType, _dataValue);\r\n    }\r\n\r\n    function getTotalRecords() public view returns (uint256) {\r\n        return dataRecords.length;\r\n    }\r\n\r\n    function getRecord(uint256 index) public view returns (uint256, string memory, string memory, string memory) {\r\n        require(index < dataRecords.length, \"Index out of bounds\");\r\n        IoTData memory record = dataRecords[index];\r\n        return (record.timestamp, record.deviceId, record.dataType, record.dataValue);\r\n    }\r\n}",
+        "file": "IoTDataStorage.sol"
+      }
+    }
+  }
+}
